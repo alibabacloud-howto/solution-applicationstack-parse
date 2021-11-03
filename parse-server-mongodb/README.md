@@ -33,7 +33,7 @@ Deployment architecture:
 
 Run the [terraform script](https://github.com/alibabacloud-howto/solution-applicationstack-parse/blob/main/parse-server-mongodb/deployment/terraform/main.tf) to initialize the resources (in this tutorial, we use MongoDB as backend database, so ECS and MongoDB are included in the Terraform script). Please specify the necessary information and region to deploy.
 
-![image.png](https://github.com/alibabacloud-howto/opensource_with_apsaradb/raw/main/apache-airflow/images/tf-parms.png)
+![image.png](https://github.com/alibabacloud-howto/solution-applicationstack-parse/raw/main/parse-server-mongodb/images/tf-parms.png)
 
 After the Terraform script execution finished, the ECS instance information are listed as below.
 
