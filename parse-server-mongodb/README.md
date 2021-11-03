@@ -25,8 +25,6 @@ Deployment architecture:
 - [Step 2. Install and deploy parse-server with ECS and MongoDB]()
 - [Step 3. Install parse-dashboard on ECS]()
 - [Step 4. Post application data to verify parse-server and parse-dashboard]()
-- [Step 5. Install Mongoku on ECS to manage data on MongoDB]()
-
 
 ---
 ### Step 1. Use Terraform to provision ECS and MongoDB database on Alibaba Cloud
@@ -39,7 +37,7 @@ After the Terraform script execution finished, the ECS instance information are 
 
 ![image.png](https://github.com/alibabacloud-howto/solution-mongodb-labs/raw/main/interactive-roadmap/images/tf-done.png)
 
-- ``eip_ecs``: The public EIP of the ECS for web app host
+- ``eip_ecs``: The public EIP of the ECS for parse server host
 
 For the MongoDB instance information, please go to the Alibaba Cloud MongoDB web console [https://mongodb.console.aliyun.com/](https://mongodb.console.aliyun.com/) to get the connection URI.
 
@@ -65,80 +63,94 @@ ssh root@<ECS_EIP>
 
 ![image.png](https://github.com/alibabacloud-howto/opensource_with_apsaradb/raw/main/apache-ofbiz/images/ecs-logon.png)
 
-Execute the following commands to install Node.js. Parse Server requires Node 8 or newer. Here we install the Node 12.
+Execute the following commands to install Node.js. Parse Server requires Node 8 or newer. Here we install the Node 12. 
 
 ```bash
 wget https://npm.taobao.org/mirrors/node/v12.0.0/node-v12.0.0-linux-x64.tar.xz
 tar -xvf node-v12.0.0-linux-x64.tar.xz
 rm node-v12.0.0-linux-x64.tar.xz  -f
 mv node-v12.0.0-linux-x64/ node
-ln -s ~/node/bin/node  /usr/local/bin/node
-ln -s ~/node/bin/npm  /usr/local/bin/npm
+ln -s ~/node/bin/node /usr/local/bin/node
+ln -s ~/node/bin/npm /usr/local/bin/npm
 ```
 
+![image.png](https://github.com/alibabacloud-howto/solution-applicationstack-parse/raw/main/parse-server-mongodb/images/node_done.png)
+
+Execute the following commands to install ```parse-server```.
 
 ```
 npm install -g parse-server
 ln -s ~/node/lib/node_modules/parse-server/bin/parse-server /usr/local/bin/parse-server
 ```
 
+![image.png](https://github.com/alibabacloud-howto/solution-applicationstack-parse/raw/main/parse-server-mongodb/images/parse-server_done.png)
+
+Execute the following commands to verify the Node modules have been installed successfully.
+
 ```
 ll /usr/local/bin/
 ```
 
-parse-server --appId my_application_id --masterKey 12345678 --databaseURI mongodb://root:N1cetest@dds-3ns2b89f85aaa3241.mongodb.rds.aliyuncs.com:3717,dds-3ns2b89f85aaa3242.mongodb.rds.aliyuncs.com:3717/admin?replicaSet=mgset-56564916 &
+![image.png](https://github.com/alibabacloud-howto/solution-applicationstack-parse/raw/main/parse-server-mongodb/images/node_verify.png)
 
+Then execute the following command to start the installed ```parse-server```.
 
-curl -X POST \
--H "X-Parse-Application-Id: my_application_id" \
--H "Content-Type: application/json" \
--d '{"score":99999,"playerName":"Sean Plott","cheatMode":false}' \
-http://localhost:1337/parse/classes/GameScore
+```
+parse-server --appId <APP_ID> --masterKey <MASTER_KEY> --databaseURI <MONGODB_URL> &
+```
 
+Please replace the parameters accordingly:
+- ```<APP_ID>``` :  your application ID
+- ```<MASTER_KEY>``` : your application secret key
+- ```<MONGODB_URL>``` : the MongoDB URL of the provisioned MongoDB instance in ```Step 1```.
 
-curl -X POST \
--H "X-Parse-Application-Id: APPLICATION_ID" \
--H "Content-Type: application/json" \
--d '{"score":120,"playerName":"Sean Plott","cheatMode":false}' \
-http://localhost:1337/parse/classes/GameScore
+For example, execute the command like this.
 
+```
+parse-server --appId my_application_id --masterKey 12345678 --databaseURI mongodb://root:N1cetest@dds-3ns6f7171a6961441.mongodb.rds.aliyuncs.com:3717,dds-3ns6f7171a6961442.mongodb.rds.aliyuncs.com:3717/admin?replicaSet=mgset-56568439 &
+```
 
-{"objectId":"OIQwuQ5Rso","createdAt":"2021-11-02T09:57:43.170Z"}
+![image.png](https://github.com/alibabacloud-howto/solution-applicationstack-parse/raw/main/parse-server-mongodb/images/parse-server_start.png)
 
+Now the ```parse-server``` is running and listening the service port ```1337```. The service API URL is ```http://<ECS_EIP>:1337/parse```.
 
+---
+### Step 3. Install parse-dashboard on ECS
 
-curl -X GET \
-  -H "X-Parse-Application-Id: APPLICATION_ID" \
-  http://localhost:1337/parse/classes/GameScore/OFvYi0iuOf
+Actually, the ```parse-server``` is ready for serving the application now, you can go to ```Step 4``` to verify and interact with ```parse-server``` directly. But ```parse-dashboard``` is high recommended to be installed for administration and monitoring of the applications on ```parse-server```.
+For more information about ```parse-dashboard```, please visit [https://github.com/parse-community/parse-dashboard](https://github.com/parse-community/parse-dashboard).
 
-
-{"objectId":"OFvYi0iuOf","score":123,"playerName":"Sean Plott","cheatMode":false,"createdAt":"2021-11-02T09:57:43.170Z","updatedAt":"2021-11-02T09:57:43.170Z"}
-
-curl -X GET \
-  -H "X-Parse-Application-Id: APPLICATION_ID" \
-  http://localhost:1337/parse/classes/GameScore
-
-
-
+Now execute the following commands to install ```parse-dashboard```.
 
 ```
 npm install -g parse-dashboard
 ln -s ~/node/lib/node_modules/parse-dashboard/bin/parse-dashboard /usr/local/bin/parse-dashboard
-```
-
-```
 ll /usr/local/bin/
 ```
 
+![image.png](https://github.com/alibabacloud-howto/solution-applicationstack-parse/raw/main/parse-server-mongodb/images/parse-dashboard_done.png)
+
+Then execute the following commands to create a configuration file for starting dashboard of the previous application started on ```parse-server```.
+
+```
 cd ~/node/lib/node_modules/parse-dashboard/bin
 vim parse-dashboard.json
+```
 
+Input the following content into the file ```parse-dashboard.json```, please remember to
+- replace ```<ECS_EIP>``` with the provisioned ECS EIP in ```Step 1```
+- replace ```<APP_ID>``` with your application ID used when starting ```parse-server``` in ```Step 2```
+- replace ```<MASTER_KEY>``` with your application secret key used when starting ```parse-server``` in ```Step 2```
+
+And here we preset the user name and password as ```admin``` and ```admin``` for ```parse-dashboard``` log on. You can change it accordingly.
+
+```
 {
   "apps": [
     {
-      "serverURL": "http://8.218.96.250:1337/parse",
-      "appId": "my_application_id",
-      "masterKey": "12345678",
+      "serverURL": "http://<ECS_EIP>:1337/parse",
+      "appId": "<APP_ID>",
+      "masterKey": "<MASTER_KEY>",
       "appName": "MyApp",
       "supportedPushLocales": ["en", "ru", "fr"]
     }
@@ -150,37 +162,58 @@ vim parse-dashboard.json
     }
   ]
 }
+```
 
-parse-dashboard --dev --config parse-dashboard.json
+![image.png](https://github.com/alibabacloud-howto/solution-applicationstack-parse/raw/main/parse-server-mongodb/images/parse-dashboard_config.png)
 
+Then execute the following command to start the ```parse-dashboard```.
 
+```
+parse-dashboard --dev --config parse-dashboard.json &
+```
+
+![image.png](https://github.com/alibabacloud-howto/solution-applicationstack-parse/raw/main/parse-server-mongodb/images/parse-dashboard_start.png)
+
+Now the ```parse-dashboard``` has been started, please visit ```http://<ECS_EIP>:4040```.
+
+![image.png](https://github.com/alibabacloud-howto/solution-applicationstack-parse/raw/main/parse-server-mongodb/images/parse-dashboard_web_1.png)
+
+Log on, then we can see dashboard of the application.
+
+![image.png](https://github.com/alibabacloud-howto/solution-applicationstack-parse/raw/main/parse-server-mongodb/images/parse-dashboard_web_2.png)
 
 ---
-### Step 4. Install Mongoku on ECS to manage data on MongoDB
+### Step 4. Post application data to verify parse-server and parse-dashboard
 
-Execute the following commands to install open source MongoDB Web Admin tool [Mongoku](https://github.com/huggingface/Mongoku) on ECS to manage data on MongoDB.
-
-Usually, we need to run the Node.js app as daemon process. Now, let's install [pm2](https://pm2.io/) to start or manage the lifecycle of the Node.js app.
-First, please execute the following commands to install ```pm2```.
+Now the ```parse-server``` and ```parse-dashboard``` are ready. Let's post some data to simulate the interaction with the ```parse-server```.
+Please execute the following commands on ECS and see the response. Remember to replace the ```my_application_id``` with the defined application ID when starting the ```parse-server```.
 
 ```
-npm i -g pm2
-ln -s ~/node/lib/node_modules/pm2/bin/pm2 /usr/local/bin/pm2
+curl -X POST \
+-H "X-Parse-Application-Id: my_application_id" \
+-H "Content-Type: application/json" \
+-d '{"score":100,"playerName":"Sean Plott","cheatMode":false}' \
+http://localhost:1337/parse/classes/GameScore
+
+curl -X POST \
+-H "X-Parse-Application-Id: my_application_id" \
+-H "Content-Type: application/json" \
+-d '{"score":120,"playerName":"Sean Plott","cheatMode":false}' \
+http://localhost:1337/parse/classes/GameScore
+
+curl -X POST \
+-H "X-Parse-Application-Id: my_application_id" \
+-H "Content-Type: application/json" \
+-d '{"score":999,"playerName":"Julian","cheatMode":true}' \
+http://localhost:1337/parse/classes/GameScore
+
+curl -X GET \
+  -H "X-Parse-Application-Id: my_application_id" \
+  http://localhost:1337/parse/classes/GameScore
 ```
 
-```
-cd ~
-npm install -g mongoku
-ln -s ~/node/lib/node_modules/mongoku/dist/cli.js /usr/local/bin/mongoku
-mongoku start --pm2
-```
+![image.png](https://github.com/alibabacloud-howto/solution-applicationstack-parse/raw/main/parse-server-mongodb/images/parse_demo.png)
 
-![image.png](https://github.com/alibabacloud-howto/solution-mongodb-labs/raw/main/nextjs-mongodb-app/images/start-mongoku.png)
+And go to the ```parse-dashboard```, refresh the web page, we can see the posted application data.
 
-Then let's open ``http://<ECS_EIP>:3100/`` again in web browser to visit the Mongoku Web Admin. Mongoku use ``3100`` port for web app by default. I've already set this in the security group rule within the [Terraform script](https://github.com/alibabacloud-howto/solution-mongodb-labs/blob/main/nextjs-mongodb-app/deployment/terraform/main.tf).
-
-Now we can add the MongoDB connection URI here as the server to navigate and manage the data for this social web app via Mongoku. Please enjoy.
-
-![image.png](https://github.com/alibabacloud-howto/solution-mongodb-labs/raw/main/nextjs-mongodb-app/images/mongoku-1.png)
-
-![image.png](https://github.com/alibabacloud-howto/solution-mongodb-labs/raw/main/nextjs-mongodb-app/images/mongoku-2.png)
+![image.png](https://github.com/alibabacloud-howto/solution-applicationstack-parse/raw/main/parse-server-mongodb/images/parse-dashboard_web_3.png)
