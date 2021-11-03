@@ -16,7 +16,7 @@ In this solution tutorial, let's see how to install and deploy Parse Server with
 
 Deployment architecture:
 
-![image.png](https://github.com/alibabacloud-howto/solution-mongodb-labs/raw/main/nextjs-mongodb-app/images/archi.png)
+![image.png](https://github.com/alibabacloud-howto/solution-applicationstack-parse/raw/main/parse-server-mongodb/images/archi.png)
 
 ---
 ### Index
