@@ -29,6 +29,8 @@ Deployment architecture:
 ---
 ### Step 1. Use Terraform to provision ECS and MongoDB database on Alibaba Cloud
 
+If you are the 1st time to use Terraform, please refer to [https://github.com/alibabacloud-howto/terraform-templates](https://github.com/alibabacloud-howto/terraform-templates) to learn how to install and use the Terraform on different operating systems.
+
 Run the [terraform script](https://github.com/alibabacloud-howto/solution-applicationstack-parse/blob/main/parse-server-mongodb/deployment/terraform/main.tf) to initialize the resources (in this tutorial, we use MongoDB as backend database, so ECS and MongoDB are included in the Terraform script). Please specify the necessary information and region to deploy.
 
 ![image.png](https://github.com/alibabacloud-howto/solution-applicationstack-parse/raw/main/parse-server-mongodb/images/tf-parms.png)
