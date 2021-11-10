@@ -21,10 +21,10 @@ Deployment architecture:
 ---
 ### Index
 
-- [Step 1. Use Terraform to provision ECS and RDS for PostgreSQL database on Alibaba Cloud]()
-- [Step 2. Install and deploy parse-server with ECS and RDS for PostgreSQL]()
-- [Step 3. Install parse-dashboard on ECS]()
-- [Step 4. Post application data to verify parse-server and parse-dashboard]()
+- [Step 1. Use Terraform to provision ECS and RDS for PostgreSQL database on Alibaba Cloud](https://github.com/alibabacloud-howto/solution-applicationstack-parse/tree/main/parse-server-postgresql#step-1-use-terraform-to-provision-ecs-and-rds-for-postgresql-database-on-alibaba-cloud)
+- [Step 2. Install and deploy parse-server with ECS and RDS for PostgreSQL](https://github.com/alibabacloud-howto/solution-applicationstack-parse/tree/main/parse-server-postgresql#step-2-install-and-deploy-parse-server-with-ecs-and-rds-for-postgresql)
+- [Step 3. Install parse-dashboard on ECS](https://github.com/alibabacloud-howto/solution-applicationstack-parse/tree/main/parse-server-postgresql#step-3-install-parse-dashboard-on-ecs)
+- [Step 4. Post application data to verify parse-server and parse-dashboard](https://github.com/alibabacloud-howto/solution-applicationstack-parse/tree/main/parse-server-postgresql#step-4-post-application-data-to-verify-parse-server-and-parse-dashboard)
 
 ---
 ### Step 1. Use Terraform to provision ECS and RDS for PostgreSQL database on Alibaba Cloud
