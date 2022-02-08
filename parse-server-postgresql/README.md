@@ -56,8 +56,6 @@ ssh root@<ECS_EIP>
 
 Node.js should have already been installed automatically via the ``remote-exec`` provisioner in the [Terraform script](https://github.com/alibabacloud-howto/solution-applicationstack-parse/blob/main/parse-server-postgresql/deployment/terraform/main.tf) within the Step 1. Parse Server requires Node 8 or newer. Here we install the Node 12. 
 
-![image.png](https://github.com/alibabacloud-howto/solution-applicationstack-parse/raw/main/parse-server-mongodb/images/node_done.png)
-
 Execute the following commands to install ```parse-server```.
 
 ```
