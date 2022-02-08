@@ -112,25 +112,6 @@ resource "alicloud_instance" "instance" {
   password                = "N1cetest" ## Please change accordingly
   instance_charge_type    = "PostPaid"
   vswitch_id              = alicloud_vswitch.vswitch_1.id
-
-  ## Provision to install Node.js
-  provisioner "remote-exec" {
-    inline = [
-      "wget https://npm.taobao.org/mirrors/node/v12.0.0/node-v12.0.0-linux-x64.tar.xz",
-      "tar -xvf node-v12.0.0-linux-x64.tar.xz",
-      "rm node-v12.0.0-linux-x64.tar.xz  -f",
-      "mv node-v12.0.0-linux-x64/ node",
-      "ln -s ~/node/bin/node /usr/local/bin/node",
-      "ln -s ~/node/bin/npm /usr/local/bin/npm"
-    ]
-
-    connection {
-      type     = "ssh"
-      user     = "root"
-      password = self.password
-      host     = self.public_ip
-    }
-  }
 }
 
 ######## RDS PostgreSQL (Parse Server database)
@@ -163,7 +144,6 @@ resource "alicloud_db_account_privilege" "parse_server_db_privilege" {
   db_names     = alicloud_db_database.parse_server_db.*.name
 }
 
-
 ######## EIP bind to setup ECS accessing from internet
 resource "alicloud_eip" "setup_ecs_access" {
   bandwidth            = "5"
@@ -173,6 +153,27 @@ resource "alicloud_eip" "setup_ecs_access" {
 resource "alicloud_eip_association" "eip_ecs" {
   allocation_id = alicloud_eip.setup_ecs_access.id
   instance_id   = alicloud_instance.instance.id
+}
+
+resource "null_resource" "setup_ecs" {
+  ## Provision to install Node.js
+  provisioner "remote-exec" {
+    inline = [
+      "wget https://npm.taobao.org/mirrors/node/v12.0.0/node-v12.0.0-linux-x64.tar.xz",
+      "tar -xvf node-v12.0.0-linux-x64.tar.xz",
+      "rm node-v12.0.0-linux-x64.tar.xz  -f",
+      "mv node-v12.0.0-linux-x64/ node",
+      "ln -s ~/node/bin/node /usr/local/bin/node",
+      "ln -s ~/node/bin/npm /usr/local/bin/npm"
+    ]
+
+    connection {
+      type     = "ssh"
+      user     = "root"
+      password = alicloud_instance.instance.password
+      host     = alicloud_eip.setup_ecs_access.ip_address
+    }
+  }
 }
 
 ######### Output: EIP of ECS
