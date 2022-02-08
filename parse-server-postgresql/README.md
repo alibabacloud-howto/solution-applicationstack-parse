@@ -54,16 +54,7 @@ ssh root@<ECS_EIP>
 
 ![image.png](https://github.com/alibabacloud-howto/opensource_with_apsaradb/raw/main/apache-ofbiz/images/ecs-logon.png)
 
-Execute the following commands to install Node.js. Parse Server requires Node 8 or newer. Here we install the Node 12. 
-
-```bash
-wget https://npm.taobao.org/mirrors/node/v12.0.0/node-v12.0.0-linux-x64.tar.xz
-tar -xvf node-v12.0.0-linux-x64.tar.xz
-rm node-v12.0.0-linux-x64.tar.xz  -f
-mv node-v12.0.0-linux-x64/ node
-ln -s ~/node/bin/node /usr/local/bin/node
-ln -s ~/node/bin/npm /usr/local/bin/npm
-```
+Node.js should have already been installed automatically via the ``remote-exec`` provisioner in the [Terraform script](https://github.com/alibabacloud-howto/solution-applicationstack-parse/blob/main/parse-server-postgresql/deployment/terraform/main.tf) within the Step 1. Parse Server requires Node 8 or newer. Here we install the Node 12. 
 
 ![image.png](https://github.com/alibabacloud-howto/solution-applicationstack-parse/raw/main/parse-server-mongodb/images/node_done.png)
 
