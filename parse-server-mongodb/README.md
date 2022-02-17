@@ -25,6 +25,7 @@ Deployment architecture:
 - [Step 2. Install and deploy parse-server with ECS and MongoDB](https://github.com/alibabacloud-howto/solution-applicationstack-parse/tree/main/parse-server-mongodb#step-2-install-and-deploy-parse-server-with-ecs-and-mongodb)
 - [Step 3. Install parse-dashboard on ECS](https://github.com/alibabacloud-howto/solution-applicationstack-parse/tree/main/parse-server-mongodb#step-3-install-parse-dashboard-on-ecs)
 - [Step 4. Post application data to verify parse-server and parse-dashboard](https://github.com/alibabacloud-howto/solution-applicationstack-parse/tree/main/parse-server-mongodb#step-4-post-application-data-to-verify-parse-server-and-parse-dashboard)
+- [Step 5. Install Mongoku on ECS to manage data on MongoDB]()
 
 ---
 ### Step 1. Use Terraform to provision ECS and MongoDB database on Alibaba Cloud
@@ -219,3 +220,24 @@ curl -X GET \
 And go to the ```parse-dashboard```, refresh the web page, we can see the posted application data.
 
 ![image.png](https://github.com/alibabacloud-howto/solution-applicationstack-parse/raw/main/parse-server-mongodb/images/parse-dashboard_web_3.png)
+
+---
+### Step 5. Install Mongoku on ECS to manage data on MongoDB
+
+Execute the following commands to install open source MongoDB Web Admin tool [Mongoku](https://github.com/huggingface/Mongoku) on ECS to manage data on MongoDB.
+
+```
+cd ~
+npm install -g mongoku
+mongoku start --pm2
+```
+
+![image.png](https://github.com/alibabacloud-howto/solution-mongodb-labs/raw/main/nextjs-mongodb-app/images/start-mongoku.png)
+
+Then let's open ``http://<ECS_EIP>:3100/`` again in web browser to visit the Mongoku Web Admin. Mongoku use ``3100`` port for web app by default. I've already set this in the security group rule within the [Terraform script](https://github.com/alibabacloud-howto/solution-mongodb-labs/blob/main/nextjs-mongodb-app/deployment/terraform/main.tf).
+
+Now we can add the MongoDB connection URI here as the server to navigate and manage the data via Mongoku. Please enjoy.
+
+![image.png](https://github.com/alibabacloud-howto/solution-mongodb-labs/raw/main/nextjs-mongodb-app/images/mongoku-1.png)
+
+![image.png](https://github.com/alibabacloud-howto/solution-mongodb-labs/raw/main/nextjs-mongodb-app/images/mongoku-2.png)
