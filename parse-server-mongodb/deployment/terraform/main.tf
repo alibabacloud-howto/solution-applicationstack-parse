@@ -135,6 +135,27 @@ resource "alicloud_eip_association" "eip_ecs" {
   instance_id   = alicloud_instance.instance.id
 }
 
+resource "null_resource" "setup_ecs" {
+  ## Provision to install Node.js
+  provisioner "remote-exec" {
+    inline = [
+      "wget https://npm.taobao.org/mirrors/node/v12.0.0/node-v12.0.0-linux-x64.tar.xz",
+      "tar -xvf node-v12.0.0-linux-x64.tar.xz",
+      "rm node-v12.0.0-linux-x64.tar.xz  -f",
+      "mv node-v12.0.0-linux-x64/ node",
+      "ln -s ~/node/bin/node /usr/local/bin/node",
+      "ln -s ~/node/bin/npm /usr/local/bin/npm"
+    ]
+
+    connection {
+      type     = "ssh"
+      user     = "root"
+      password = alicloud_instance.instance.password
+      host     = alicloud_eip.setup_ecs_access.ip_address
+    }
+  }
+}
+
 ######### Output: EIP of ECS
 output "eip_ecs" {
   value = alicloud_eip.setup_ecs_access.ip_address
