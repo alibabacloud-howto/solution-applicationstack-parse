@@ -25,7 +25,7 @@ Deployment architecture:
 - [Step 2. Install and deploy parse-server with ECS and MongoDB](https://github.com/alibabacloud-howto/solution-applicationstack-parse/tree/main/parse-server-mongodb#step-2-install-and-deploy-parse-server-with-ecs-and-mongodb)
 - [Step 3. Install parse-dashboard on ECS](https://github.com/alibabacloud-howto/solution-applicationstack-parse/tree/main/parse-server-mongodb#step-3-install-parse-dashboard-on-ecs)
 - [Step 4. Post application data to verify parse-server and parse-dashboard](https://github.com/alibabacloud-howto/solution-applicationstack-parse/tree/main/parse-server-mongodb#step-4-post-application-data-to-verify-parse-server-and-parse-dashboard)
-- [Step 5. Install Mongoku on ECS to manage data on MongoDB]()
+- [Step 5. Install Mongoku on ECS to manage data on MongoDB](https://github.com/alibabacloud-howto/solution-applicationstack-parse/tree/main/parse-server-mongodb#step-5-install-mongoku-on-ecs-to-manage-data-on-mongodb)
 
 ---
 ### Step 1. Use Terraform to provision ECS and MongoDB database on Alibaba Cloud
@@ -239,5 +239,3 @@ Then let's open ``http://<ECS_EIP>:3100/`` again in web browser to visit the Mon
 Now we can add the MongoDB connection URI here as the server to navigate and manage the data via Mongoku. Please enjoy.
 
 ![image.png](https://github.com/alibabacloud-howto/solution-mongodb-labs/raw/main/nextjs-mongodb-app/images/mongoku-1.png)
-
-![image.png](https://github.com/alibabacloud-howto/solution-mongodb-labs/raw/main/nextjs-mongodb-app/images/mongoku-2.png)
