@@ -32,7 +32,7 @@ Deployment architecture:
 
 If you are the 1st time to use Terraform, please refer to [https://github.com/alibabacloud-howto/terraform-templates](https://github.com/alibabacloud-howto/terraform-templates) to learn how to install and use the Terraform on different operating systems.
 
-Run the [terraform script](https://github.com/alibabacloud-howto/solution-applicationstack-parse/blob/main/parse-server-mongodb/deployment/terraform/main.tf) to initialize the resources (in this tutorial, we use MongoDB as backend database, so ECS and MongoDB are included in the Terraform script). Please specify the necessary information and region to deploy.
+Run the [Terraform script](https://github.com/alibabacloud-howto/solution-applicationstack-parse/blob/main/parse-server-mongodb/deployment/terraform/main.tf) to initialize the resources (in this tutorial, we use MongoDB as backend database, so ECS and MongoDB are included in the Terraform script). Please specify the necessary information and region to deploy.
 
 ![image.png](https://github.com/alibabacloud-howto/solution-applicationstack-parse/raw/main/parse-server-mongodb/images/tf-parms.png)
 
@@ -225,7 +225,7 @@ mongoku start --pm2
 
 ![image.png](https://github.com/alibabacloud-howto/solution-mongodb-labs/raw/main/nextjs-mongodb-app/images/start-mongoku.png)
 
-Then let's open ``http://<ECS_EIP>:3100/`` again in web browser to visit the Mongoku Web Admin. Mongoku use ``3100`` port for web app by default. I've already set this in the security group rule within the [Terraform script](https://github.com/alibabacloud-howto/solution-mongodb-labs/blob/main/nextjs-mongodb-app/deployment/terraform/main.tf).
+Then let's open ``http://<ECS_EIP>:3100/`` again in web browser to visit the Mongoku Web Admin. Mongoku use ``3100`` port for web app by default. I've already set this in the security group rule within the [Terraform script](https://github.com/alibabacloud-howto/solution-applicationstack-parse/blob/main/parse-server-mongodb/deployment/terraform/main.tf).
 
 Now we can add the MongoDB connection URI here as the server to navigate and manage the data via Mongoku. Please enjoy.
 
